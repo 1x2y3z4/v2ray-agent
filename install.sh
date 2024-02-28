@@ -5655,7 +5655,7 @@ updateV2RayAgent() {
     echoContent skyBlue "\n进度  $1/${totalProgress} : 更新v2ray-agent脚本"
     rm -rf /etc/v2ray-agent/install.sh
     #    if wget --help | grep -q show-progress; then
-    wget -c -q "${wgetShowProgressStatus}" -P /etc/v2ray-agent/ -N --no-check-certificate "https://raw.githubusercontent.com/mack-a/v2ray-agent/master/install.sh"
+    wget -c -q "${wgetShowProgressStatus}" -P /etc/v2ray-agent/ -N --no-check-certificate "https://raw.githubusercontent.com/1x2y3z4/v2ray-agent/master/install.sh"
     #    else
     #        wget -c -q -P /etc/v2ray-agent/ -N --no-check-certificate "https://raw.githubusercontent.com/mack-a/v2ray-agent/master/install.sh"
     #    fi
@@ -5668,7 +5668,7 @@ updateV2RayAgent() {
     echoContent yellow " ---> 请手动执行[vasma]打开脚本"
     echoContent green " ---> 当前版本：${version}\n"
     echoContent yellow "如更新不成功，请手动执行下面命令\n"
-    echoContent skyBlue "wget -P /root -N --no-check-certificate https://raw.githubusercontent.com/mack-a/v2ray-agent/master/install.sh && chmod 700 /root/install.sh && /root/install.sh"
+    echoContent skyBlue "wget -P /root -N --no-check-certificate https://raw.githubusercontent.com/1x2y3z4/v2ray-agent/master/install.sh && chmod 700 /root/install.sh && /root/install.sh"
     echo
     exit 0
 }
@@ -7787,7 +7787,7 @@ addOtherSubscribe() {
 clashMetaConfig() {
     local url=$1
     local id=$2
-    cat <<EOF >"/etc/v2ray-agent/subscribe/clashMetaProfiles/${id}"
+    cat <<EOF >"/etc/v2ray-agent/subscrnibe/clashMetaProfiles/${id}"
 mixed-port: 7890
 unified-delay: false
 geodata-mode: true
@@ -7850,6 +7850,7 @@ dns:
       - 114.114.114.114
       - https://dns.alidns.com/dns-query#h3=true
 
+proxies:
 proxy-providers:
   ${subscribeSalt}_provider:
     type: http
@@ -7870,7 +7871,7 @@ proxy-groups:
   - name: 自动选择
     type: url-test
     url: http://www.gstatic.com/generate_204
-    interval: 36000
+    interval: 300
     tolerance: 50
     use:
       - ${subscribeSalt}_provider
@@ -7976,7 +7977,13 @@ proxy-groups:
       - 手动切换
       - 自动选择
       - DIRECT
-
+  - name: Apple
+    type: select
+    use:
+      - ${subscribeSalt}_provider
+    proxies:
+      - DIRECT
+      - 自动选择
   - name: 国内媒体
     type: select
     use:
@@ -8059,6 +8066,12 @@ rule-providers:
     url: https://mirror.ghproxy.com/https://raw.githubusercontent.com/Loyalsoldier/clash-rules/release/applications.txt
     path: ./ruleset/applications.yaml
     interval: 86400
+  Apple:
+    type: http
+    behavior: classical
+    url: https://mirror.ghproxy.com/https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/Apple/Apple_Classical_No_Resolve.yaml
+    path: ./ruleset/Apple.yaml
+    interval: 86400
   Disney:
     type: http
     behavior: classical
@@ -8086,15 +8099,27 @@ rule-providers:
   OpenAI:
     type: http
     behavior: classical
-    url: https://mirror.ghproxy.com/https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/OpenAI/OpenAI.yaml
+    url: https://gitlab.com/lodepuly/vpn_tool/-/raw/master/Tool/Clash/Rule/OpenAI.yaml
     path: ./ruleset/openai.yaml
     interval: 86400
+  ChatGPT_Voice:
+    type: http
+    behavior: classical
+    url: https://gitlab.com/lodepuly/vpn_tool/-/raw/master/Tool/Clash/Rule/ChatGPT_Voice.yaml
+    path: ./ruleset/chatgpt_voice.yaml
+    interval: 86400  
   Bing:
     type: http
     behavior: classical
     url: https://mirror.ghproxy.com/https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/Bing/Bing.yaml
     path: ./ruleset/bing.yaml
     interval: 86400
+  Copilot:
+    type: http
+    behavior: classical
+    url: https://mirror.ghproxy.com/https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/Copilot/Copilot.yaml
+    path: ./ruleset/copilot.yaml
+    interval: 86400  
   Google:
     type: http
     behavior: classical
@@ -8127,6 +8152,7 @@ rule-providers:
     path: ./Rules/ChinaMaxIPNoIPv6.yaml
 rules:
   - RULE-SET,YouTube,YouTube,no-resolve
+  - AND,((NETWORK,UDP),(DST-PORT,443),(RULE-SET,YouTube)),REJECT
   - RULE-SET,Google,Google,no-resolve
   - RULE-SET,GitHub,GitHub
   - RULE-SET,telegramcidr,Telegram,no-resolve
@@ -8134,10 +8160,13 @@ rules:
   - RULE-SET,Netflix,Netflix
   - RULE-SET,HBO,HBO
   - RULE-SET,Bing,Bing
+  - RULE-SET,Copilot,Bing
   - RULE-SET,OpenAI,OpenAI
+  - RULE-SET,ChatGPT_Voice,OpenAI
   - RULE-SET,Disney,Disney
   - RULE-SET,proxy,全球代理
   - RULE-SET,gfw,全球代理
+  - RULE-SET,Apple,Apple,no-resolve
   - RULE-SET,applications,本地直连
   - RULE-SET,ChinaMaxDomain,本地直连
   - RULE-SET,ChinaMaxIPNoIPv6,本地直连,no-resolve
