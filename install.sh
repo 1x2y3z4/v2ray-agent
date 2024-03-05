@@ -7787,7 +7787,7 @@ addOtherSubscribe() {
 clashMetaConfig() {
     local url=$1
     local id=$2
-    cat <<EOF >"/etc/v2ray-agent/subscrnibe/clashMetaProfiles/${id}"
+    cat <<EOF >"/etc/v2ray-agent/subscribe/clashMetaProfiles/${id}"
 mixed-port: 7890
 unified-delay: false
 geodata-mode: true
