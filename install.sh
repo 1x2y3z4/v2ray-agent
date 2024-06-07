@@ -8509,11 +8509,11 @@ rule-providers:
     url: https://gitlab.com/lodepuly/vpn_tool/-/raw/master/Tool/Clash/Rule/OpenAI.yaml
     path: ./ruleset/openai.yaml
     interval: 86400
-  ChatGPT_Voice:
+  AI:
     type: http
     behavior: classical
-    url: https://gitlab.com/lodepuly/vpn_tool/-/raw/master/Tool/Clash/Rule/ChatGPT_Voice.yaml
-    path: ./ruleset/chatgpt_voice.yaml
+    url: https://gitlab.com/lodepuly/vpn_tool/-/raw/master/Tool/Clash/Rule/AI.yaml
+    path: ./ruleset/ai.yaml
     interval: 86400  
   Bing:
     type: http
@@ -8570,7 +8570,7 @@ rules:
   - RULE-SET,Copilot,Bing
   - DOMAIN-SUFFIX,a.nel.cloudflare.com,OpenAI
   - RULE-SET,OpenAI,OpenAI
-  - RULE-SET,ChatGPT_Voice,OpenAI
+  - RULE-SET,AI,OpenAI
   - RULE-SET,Disney,Disney
   - RULE-SET,proxy,全球代理
   - RULE-SET,gfw,全球代理
